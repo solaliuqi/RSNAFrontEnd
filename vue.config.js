@@ -29,6 +29,17 @@ module.exports = {
       .use('i18n')
       .loader('@kazupon/vue-i18n-loader')
       .end()
+    //企图引入sass
+    config.module
+      rules: [
+      //...默认及其他
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
+      }
+    ]
+
+
     // svg
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
