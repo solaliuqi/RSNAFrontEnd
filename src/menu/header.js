@@ -2,13 +2,11 @@
 export default [
   { path: '/index', title: '首页', icon: 'home' },
   {
-    title: '演示页面',
-    icon: 'folder-o',
+    title: '用户',
+    icon: 'user-circle',
     children: [
-      { path: '/demo/page1', title: '页面 1' },
-      { path: '/demo/page2', title: '页面 2' },
-      { path: '/demo/page3', title: '页面 3' },
-      { path: '/page-demo', title: '新建示例' }
+      { path: '/demo/page1', title: '页面1' },
+      { path: '/demo/page2', title: '页面2' },
     ]
   }
 ]
