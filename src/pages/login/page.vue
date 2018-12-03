@@ -36,6 +36,9 @@
       <el-button size="default" type="info" class="button-help" @click="dialogVisible = true">
         快速选择用户（测试功能）
       </el-button>
+      <el-button size="default" type="info" class="button-help" @click="enter">
+        直接进入
+      </el-button>
     </div>
     <el-dialog
       title="快速选择用户"
@@ -124,6 +127,11 @@ export default {
     handleUserBtnClick (user) {
       this.formLogin.username = user.username
       this.formLogin.password = user.password
+      this.submit()
+    },
+    enter(){
+      this.formLogin.username = 'editor'
+      this.formlogin.password = 'editor'
       this.submit()
     },
     /**
