@@ -10,14 +10,12 @@
       <!-- 顶栏 -->
       <div
         class="d2-theme-header"
-        :style="{
-          opacity: this.searchActive ? 0.5 : 1
+        :style="{opacity: this.searchActive ? 0.5 : 1,
         }"
         flex-box="0"
         flex>
-        <div class="logo-group" :style="{width: asideCollapse ? asideWidthCollapse : asideWidth}" flex-box="0">
-          <img v-if="asideCollapse" :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`">
-          <img v-else :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`">
+        <div class="logo-group" :style="{width: asideWidthCollapse }" flex-box="0">
+          <img :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`">
         </div>
         <div class="toggle-aside-btn" @click="handleToggleAside" flex-box="0">
           <d2-icon name="bars"/>
@@ -101,10 +99,10 @@ export default {
   },
   data () {
     return {
-      // [侧边栏宽度] 正常状态
-      asideWidth: '200px',
+      // // [侧边栏宽度] 正常状态
+      asideWidth: '118px',
       // [侧边栏宽度] 折叠状态
-      asideWidthCollapse: '65px'
+      asideWidthCollapse: '60px'
     }
   },
   computed: {

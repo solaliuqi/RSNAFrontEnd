@@ -1,73 +1,127 @@
 <template>
-  <d2-container class="page">
-    <d2-page-cover
-      :title="`D2 Admin ${version}`"
-      sub-title="优雅的中后台集成方案">
-      <d2-icon-svg
-        class="page__logo"
-        name="d2-admin"/>
-      <template slot="footer">
-        <div class="page__btn-group">
-          <span @click="$open('https://github.com/d2-projects')">开源组织</span> |
-          <span @click="$open('https://doc.d2admin.fairyever.com/zh/')">文档</span> |
-          <span @click="$open('https://github.com/d2-projects/d2-admin-start-kit')">简化版</span> |
-          <span @click="$open('https://alibaba.github.io/ice/scaffold?type=vue')">飞冰</span> |
-          <span @click="$open('https://juejin.im/user/57a48b632e958a006691b946/posts')">掘金</span> |
-          <span @click="$open('https://awesome.fairyever.com/daily/')">开发者日报</span> |
-          <el-popover
-            :width="172"
-            trigger="hover">
-            <p class="d2-mt-0 d2-mb-10">D2Projects</p>
-            <img
-              src="./image/qr@2x.png"
-              style="width: 172px;">
-            <span slot="reference">微信公众号</span>
-            <p style="font-size: 12px; margin-top: 0px; margin-bottom: 0px;">
-              官方公众号，主要推送前端技术类文章、框架资源、学习教程，以及 D2 系列项目更新信息
-            </p>
-          </el-popover>
-        </div>
-        <d2-badge/>
-        <d2-help-btn/>
-      </template>
-    </d2-page-cover>
-  </d2-container>
+    <d2-container better-scroll >
+        <el-container>
+            <el-header height="55px" style="font-size:25px;font-family: 'Yapi SC';color:#EAEAEA">
+                <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+                肺炎病灶自动检测系统
+            </el-header>
+            <el-container style="height: 650px">
+                <el-aside width="250px">
+                    <div>
+                        <el-badge is-dot class="item"><i class="fa fa-yelp" aria-hidden="true"></i> 肺炎检测结果</el-badge>
+                        <div class="checkbox">
+                            <el-button  class="btn0" type="primary" plain><i class="fa fa-crosshairs" aria-hidden="true"></i>
+                                无框标记
+                            </el-button><br>
+                            <el-button  class="btn0" type="danger" plain ><i class="fa fa-plus-square" aria-hidden="true"></i>
+                                有框标记</el-button>
+                        </div>
+                    </div>
+                    <div class="plung">
+                        <el-badge is-dot class="item"><i class="fa fa-clipboard" aria-hidden="true"></i> 肺炎图片</el-badge>
+                        <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/">
+                            <el-button type="primary" class="btn1">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                            <div slot="tip" class="el-upload__tip">上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
+                        <div class="showpic">
+                            <el-button type="danger" class="btn1">显示图片 <i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                            <div slot="tip" class="el-upload__tip">查看上传的图片</div>
+                        </div>
+                    </div>
+                </el-aside>
+                <el-container>
+                    <el-main>
+                        <el-dialog :visible.sync="dialogVisible">
+                            <img width="100%" :src="dialogImageUrl" alt="">
+                        </el-dialog>
+                    </el-main>
+                    <el-footer height="55px">Footer</el-footer>
+                </el-container>
+            </el-container>
+        </el-container>
+    </d2-container>
 </template>
-
-<script>
-import { mapState } from 'vuex'
-import D2HelpBtn from './components/d2-help-btn'
-import D2Badge from './components/d2-badge'
-export default {
-  components: {
-    D2HelpBtn,
-    D2Badge
-  },
-  computed: {
-    ...mapState('d2admin/releases', [
-      'version'
-    ])
-  }
-}
-</script>
-
-<style lang="scss" scoped>
-@import '~@/assets/style/public.scss';
-.page {
-  .page__logo {
-    width: 120px;
-  }
-  .page__btn-group {
-    color: $color-text-placehoder;
-    font-size: 12px;
-    margin-top: -10px;
-    margin-bottom: 20px;
-    span {
-      color: $color-text-sub;
-      &:hover {
-        color: $color-text-main;
-      }
+<!--<script>-->
+    <!--export default {-->
+        <!--data() {-->
+            <!--return {-->
+                <!--dialogImageUrl: '',-->
+                <!--dialogVisible: false-->
+            <!--};-->
+        <!--},-->
+        <!--methods: {-->
+            <!--handleRemove(file, fileList) {-->
+                <!--console.log(file, fileList);-->
+            <!--},-->
+            <!--handlePictureCardPreview(file) {-->
+                <!--this.dialogImageUrl = file.url;-->
+                <!--this.dialogVisible = true;-->
+            <!--}-->
+        <!--}-->
+    <!--}-->
+<!--</script>-->
+<style>
+    .el-header, .el-footer {
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 55px;
     }
-  }
-}
+
+    .el-aside {
+        background-color: #D3DCE6;
+        color: #333;
+        /*text-align: center;*/
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 160px;
+    }
+    .el-badge{
+        margin: 30px 0px 15px 20px;
+        font-size:25px;
+        color:#999999
+
+    }
+    body > .el-container {
+        margin-bottom: 40px;
+    }
+
+    .el-container:nth-child(5) .el-aside,
+    .el-container:nth-child(6) .el-aside {
+        line-height: 260px;
+    }
+
+    .el-container:nth-child(7) .el-aside {
+        line-height: 320px;
+    }
+
+    .upload-demo {
+        text-align: center;
+        padding-top:10px;
+    }
+    .checkbox{
+        text-align: center;
+    }
+    .btn0{
+        width: 200px;
+        height: 65px;
+        margin-bottom: 15px;
+        border-radius:10px;
+        font-size: 20px;
+    }
+    .btn1{
+        width:200px;
+        font-size:20px;
+    }
+    .plung{
+        margin-top:90px;
+    }
+    .showpic{
+        text-align: center;
+        padding-top: 25px;
+    }
 </style>

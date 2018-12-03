@@ -44,12 +44,6 @@ const frameIn = [
           render: h => h()
         }
       },
-      {
-        path: '/page-demo',
-        name: 'page-demo ',
-        component: () => import('@/pages/page-demo'),
-        meta: { meta, title: '新建示例' }
-      }
     ]
   },
   demo
