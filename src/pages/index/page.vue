@@ -65,11 +65,8 @@
     import Vue from 'vue'
     import MdButton from 'vue-material'
     import dwv from 'dwv'
-
     Vue.use(MdButton)
-
     // gui overrides
-
     // decode query(解码查询)
     dwv.utils.decodeQuery = dwv.utils.base.decodeQuery
     // progress
@@ -80,14 +77,12 @@
     dwv.gui.getElement = dwv.gui.base.getElement
     // refresh element
     dwv.gui.refreshElement = dwv.gui.base.refreshElement
-
     // Image decoders (for web workers) 图像解码
     dwv.image.decoderScripts = {
         'jpeg2000': 'static/dwv/decoders/pdfjs/decode-jpeg2000.js',
         'jpeg-lossless': 'static/dwv/decoders/rii-mango/decode-jpegloss.js',
         'jpeg-baseline': 'static/dwv/decoders/pdfjs/decode-jpegbaseline.js'
     }
-
     export default {
         name: 'dwv',
         data: function () {
@@ -100,7 +95,6 @@
         mounted () {
             // create app
             this.dwvApp = new dwv.App()
-
             // initialise app
             this.dwvApp.init({
                 'containerDivId': 'dwv',
@@ -120,10 +114,8 @@
                 var points = new Array()
                 points[0] = new dwv.math.Point2D( 200, 200 )
                 points[1] = new dwv.math.Point2D( 400, 400 )
-
                 var finalShapeGroup =dwv.tool.RectangleFactory.prototype.create(points,new dwv.html.Style, this.dwvApp.getImage())
                 finalShapeGroup.id( dwv.math.guid() );
-
                 // get the position group
                 var posGroup = this.dwvApp.getDrawController().getCurrentPosGroup();
                 // add shape group to position group
@@ -154,10 +146,8 @@
                 var points = new Array()
                 points[0] = new dwv.math.Point2D( 200, 200 )
                 points[1] = new dwv.math.Point2D( 400, 400 )
-
                 var finalShapeGroup =dwv.tool.RectangleFactory.prototype.create(points,new dwv.html.Style, this.dwvApp.getImage())
                 finalShapeGroup.id( dwv.math.guid() );
-
                 // get the position group
                 var posGroup = this.dwvApp.getDrawController().getCurrentPosGroup();
                 // add shape group to position group
@@ -259,11 +249,9 @@
     }
     /*图像交互css*/
     #dwv { font-family: Arial, Helvetica, sans-serif; }
-
     .button-row {
         text-align: center;
     }
-
     .legend {
         text-align: center;
         font-size: 8pt;
@@ -277,7 +265,6 @@
         left: 0px; }
     .drawDiv {
         position: absolute; pointer-events: none; }
-
     /* drag&drop */
     .dropBox {
         border: 5px dashed #ccc;

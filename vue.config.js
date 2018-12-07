@@ -74,7 +74,7 @@ module.exports = {
             new CopyWebpackPlugin([
                 {
                     //from: require('path').resolve(__dirname,'../RSNAFrontEnd1/node_modules/dwv/decoders'),
-                    from: 'D:/vue/RSNAFrontEnd/node_modules/dwv/decoders',
+                    from: 'E:/RSNAFrontEnd/node_modules/dwv/decoders',
                     to: 'static/dwv/decoders',
                     ignore: ['.*']
                 }
