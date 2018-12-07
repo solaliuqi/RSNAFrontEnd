@@ -1,6 +1,6 @@
 // 拼接路径
 const resolve = dir => require('path').join(__dirname, dir)
-
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 // 基础路径 注意发布之前要先修改这里
 let baseUrl = '/'
 
@@ -69,4 +69,16 @@ module.exports = {
       .add('babel-polyfill')
       .end()
   }
+    ,configureWebpack: {
+        plugins: [
+            new CopyWebpackPlugin([
+                {
+                    //from: require('path').resolve(__dirname,'../RSNAFrontEnd1/node_modules/dwv/decoders'),
+                    from: 'E:/RSNAFrontEnd/node_modules/dwv/decoders',
+                    to: 'static/dwv/decoders',
+                    ignore: ['.*']
+                }
+            ])
+        ]
+    }
 }
