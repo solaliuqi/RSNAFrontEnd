@@ -1,11 +1,11 @@
 <template>
-    <d2-container better-scroll >
-        <el-container>
+    <d2-container better-scroll  style="position:absolute;width:100%;height:100%;">
+        <el-container >
             <el-header height="55px" style="font-size:25px;font-family: 'Yapi SC';color:#EAEAEA">
                 <i class="fa fa-folder-open-o" aria-hidden="true"></i>
                 肺炎病灶自动检测系统
             </el-header>
-            <el-container style="height: 650px">
+            <el-container >
                 <el-aside width="250px">
                     <div>
                         <el-badge is-dot class="item"><i class="fa fa-yelp" aria-hidden="true"></i> 肺炎检测结果</el-badge>
@@ -53,7 +53,7 @@
                             <img width="100%" :src="dialogImageUrl" alt="">
                         </el-dialog>
                     </el-main>
-                    <el-footer height="55px">Footer</el-footer>
+                    <el-footer height="55px">Copyright © 2018, Zhejiang University, All rights reserved.</el-footer>
                 </el-container>
             </el-container>
         </el-container>
