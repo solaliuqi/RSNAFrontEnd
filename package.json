@@ -15,9 +15,7 @@
     "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.12.1",
-    "cornerstone-core": "^2.2.7",
     "dayjs": "^1.6.7",
-    "dicom-parser": "^1.8.1",
     "element-ui": "^2.4.4",
     "flex.css": "^1.1.7",
     "fuse.js": "^3.2.1",
@@ -33,7 +31,9 @@
     "vue": "^2.5.17",
     "vue-i18n": "^7.4.2",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vue-material": "~1.0.0-beta",
+    "dwv": "0.24.0"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
