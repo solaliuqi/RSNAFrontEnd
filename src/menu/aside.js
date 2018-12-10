@@ -5,7 +5,7 @@ export default [
         title: '用户',
         icon: 'user-circle',
         children: [
-            {path: '/user/profile', title: '个人信息'},
+            {path: '/user/profile', title: '个人中心'},
           {path: '/user/history', title: '历史信息'}]
     }
 ]
