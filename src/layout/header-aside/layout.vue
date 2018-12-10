@@ -100,7 +100,7 @@ export default {
   data () {
     return {
       // // [侧边栏宽度] 正常状态
-      asideWidth: '118px',
+      asideWidth: '140px',
       // [侧边栏宽度] 折叠状态
       asideWidthCollapse: '60px'
     }
