@@ -19,10 +19,15 @@ import router from './router'
 import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
-
+//省市街道联动菜单
+import VueAreaLinkage from 'vue-area-linkage'
+import { pca, pcaa } from 'area-data'
+import 'vue-area-linkage/dist/index.css'
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
+Vue.use(VueAreaLinkage)
+
 
 new Vue({
   router,
