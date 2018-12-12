@@ -5,8 +5,8 @@ export default [
     title: '用户',
     icon: 'user-circle',
     children: [
-      { path: '/demo/page1', title: '页面1' },
-      { path: '/demo/page2', title: '页面2' },
+      {path: '/user/profile', title: '个人中心'},
+      {path: '/user/history', title: '历史信息'},
     ]
   }
 ]
