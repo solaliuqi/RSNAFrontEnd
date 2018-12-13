@@ -19,12 +19,14 @@
                     </div>
                     <div class="plung">
                         <el-badge is-dot class="item"><i class="fa fa-clipboard" aria-hidden="true"></i> 肺炎图片</el-badge>
-                        <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/">
-                            <el-button type="primary" class="btn1">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                        <el-upload class="upload-demo"
+                                   :before-upload="onUpload"
+                                   action="https://jsonplaceholder.typicode.com/posts/">
+                            <el-button type="primary" class="btn1" >上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
                             <div slot="tip" class="el-upload__tip">上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                         <div class="showpic">
-                            <el-button type="danger" class="btn1">显示图片 <i class="fa fa-eye" aria-hidden="true"></i></el-button>
+                            <el-button type="danger" class="btn1" value="Draw" v-on:click="getBoxes">显示图片 <i class="fa fa-eye" aria-hidden="true"></i></el-button>
                             <div slot="tip" class="el-upload__tip">查看上传的图片</div>
                         </div>
                     </div>
@@ -32,22 +34,7 @@
                 <el-container>
                     <el-main>
                         <!--图像交互-->
-                        <div id="dwv">
-                            <md-progress-bar md-mode="determinate" :md-value="loaded"></md-progress-bar>
-                            <div class="button-row">
-                                <md-button class="md-raised md-primary" value="Scroll" v-on:click="onShowbox">显示结果</md-button>
-                                <md-button class="md-raised md-primary" value="Draw" v-on:click="onModify">修改结果</md-button>
-                                <md-button class="md-raised md-primary" value="WindowLevel" v-on:click="onClick">调整明暗/对比度</md-button>
-                                <md-button class="md-raised md-primary" value="ZoomAndPan" v-on:click="onClick">缩放移动</md-button>
-                                <md-button class="md-raised md-primary" value="Scroll" v-on:click="OnZoomreset">还原缩放</md-button>
-                            </div>
-                            <div class="layerContainer">
-                                <div class="dropBox"></div>
-                                <canvas class="imageLayer">仅适用于兼容HTML5的浏览器……</canvas>
-                                <div class="drawDiv"></div>
-                            </div>
-                            <div class="legend">{{ legend }}</div>
-                        </div>
+                        <dwvVue ref="dwv"></dwvVue>
                         <!--图像交互-->
                         <el-dialog :visible.sync="dialogVisible">
                             <img width="100%" :src="dialogImageUrl" alt="">
@@ -61,126 +48,39 @@
 </template>
 
 <script>
-    // import
-    import Vue from 'vue'
-    import MdButton from 'vue-material'
-    import dwv from 'dwv'
-    Vue.use(MdButton)
-    // gui overrides
-    // decode query(解码查询)
-    dwv.utils.decodeQuery = dwv.utils.base.decodeQuery
-    // progress
-    dwv.gui.displayProgress = function () {}
-    // window
-    dwv.gui.getWindowSize = dwv.gui.base.getWindowSize
-    // get element
-    dwv.gui.getElement = dwv.gui.base.getElement
-    // refresh element
-    dwv.gui.refreshElement = dwv.gui.base.refreshElement
-    // Image decoders (for web workers) 图像解码
-    dwv.image.decoderScripts = {
-        'jpeg2000': 'static/dwv/decoders/pdfjs/decode-jpeg2000.js',
-        'jpeg-lossless': 'static/dwv/decoders/rii-mango/decode-jpegloss.js',
-        'jpeg-baseline': 'static/dwv/decoders/pdfjs/decode-jpegbaseline.js'
-    }
+    import dwvVue from './components/dwv'
+
     export default {
-        name: 'dwv',
-        data: function () {
-            return {
-                legend: dwv.getVersion(),
-                dwvApp: null,
-                loaded: 0
-            }
-        },
-        mounted () {
-            // create app
-            this.dwvApp = new dwv.App()
-            // initialise app
-            this.dwvApp.init({
-                'containerDivId': 'dwv',
-                'fitToWindow': true,
-                'tools': ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
-                'shapes': ['Rectangle'],
-                'isMobile': false
-            })
-            // progress
-            var self = this
-            var whsbb = 0
-            this.dwvApp.addEventListener('load-progress', function (event) {
-                self.loaded = event.loaded
-            })
-            this.dwvApp.addEventListener('filter-run', function (event) {
-                self.loaded = event.loaded
-                var points = new Array()
-                points[0] = new dwv.math.Point2D( 200, 200 )
-                points[1] = new dwv.math.Point2D( 400, 400 )
-                var finalShapeGroup =dwv.tool.RectangleFactory.prototype.create(points,new dwv.html.Style, this.dwvApp.getImage())
-                finalShapeGroup.id( dwv.math.guid() );
-                // get the position group
-                var posGroup = this.dwvApp.getDrawController().getCurrentPosGroup();
-                // add shape group to position group
-                posGroup.add(finalShapeGroup);
-                var drawLayer = this.dwvApp.getDrawController().getDrawLayer()
-                // re-activate layer
-                drawLayer.hitGraphEnabled(true);
-                // draw shape command
-                var command = new dwv.tool.DrawGroupCommand(finalShapeGroup, 'Rectangle', drawLayer);
-                // command.onExecute = fireEvent;
-                // command.onUndo = fireEvent;
-                // execute it
-                command.execute();
-                // save it in undo stack
-                this.dwvApp.addToUndoStack(command);
-            })
+        name: 'App',
+        components: {
+            dwvVue
         },
         methods: {
-            OnZoomreset: function(event) {
-                this.dwvApp.onZoomReset()
+            /*传回image像素值*/
+            getFile: function(){
+                return this.$refs.dwv.getFile()
             },
-            onModify: function (event) {
-                this.dwvApp.deleteDraws()
-                this.dwvApp.onChangeTool(event)
+            /*传回一个json数组
+            例如：[{"left_x":200,"left_y":200,"right_x":400,"right_y":600},{"left_x":600,"left_y":200,"right_x":800,"right_y":600}]*/
+            getBoxes: function(){
+                return this.$refs.dwv.getBoxes()
             },
-            onShowbox: function (event) {
-                this.dwvApp.deleteDraws()
-                var points = new Array()
-                points[0] = new dwv.math.Point2D( 200, 200 )
-                points[1] = new dwv.math.Point2D( 400, 400 )
-                var finalShapeGroup =dwv.tool.RectangleFactory.prototype.create(points,new dwv.html.Style, this.dwvApp.getImage())
-                finalShapeGroup.id( dwv.math.guid() );
-                // get the position group
-                var posGroup = this.dwvApp.getDrawController().getCurrentPosGroup();
-                // add shape group to position group
-                posGroup.add(finalShapeGroup);
-                var drawLayer = this.dwvApp.getDrawController().getDrawLayer()
-                // re-activate layer
-                drawLayer.hitGraphEnabled(true);
-                // draw shape command
-                var command = new dwv.tool.DrawGroupCommand(finalShapeGroup, 'Rectangle', drawLayer);
-                // command.onExecute = fireEvent;
-                // command.onUndo = fireEvent;
-                // execute it
-                command.execute();
-                // save it in undo stack
-                this.dwvApp.addToUndoStack(command);
+            /*在影像上画框，传入JSON数组
+            例如：[{"left_x":200,"left_y":200,"right_x":400,"right_y":600},{"left_x":600,"left_y":200,"right_x":800,"right_y":600}]*/
+            OnShowbox: function(boxLists) {
+                this.$refs.dwv.onShowbox(boxLists)
             },
-            onClick: function (event) {
-                this.dwvApp.onChangeTool(event)
-                // let group = dwv.tool.RectangleFactory.prototype.create(points,new dwv.html.Style, this.dwvApp.getImage())
-                // console.log(group)
-                //this.dwvApp.setDrawings().
-                // var boxes_num = this.dwvApp.getDrawController().getCurrentPosGroup().children.length
-                // var boxes=new Array()
-                // for (var i=0 ;i < boxes_num; i++)
-                // {
-                //     let getChildren = this.dwvApp.getDrawController().getCurrentPosGroup()
-                //     boxes[i] = getChildren.children[i].children[0].attrs.x + " " + getChildren.children[i].children[0].attrs.y + " "
-                //                 + getChildren.children[i].children[0].attrs.width + " " + getChildren.children[i].children[0].attrs.height
-                //     console.log(boxes[i])
-                // }
+            /*修改Boxes*/
+            onModify: function(event) {
+                this.$refs.dwv.onModify(event)
+            },
+            /*上传图片*/
+            onUpload: function(file) {
+                this.$refs.dwv.onUpload(file)
             }
         }
     }
+
 </script>
 
 <style>
