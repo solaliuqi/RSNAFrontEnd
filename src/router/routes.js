@@ -2,7 +2,7 @@ import user from './modules/user'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
-const meta = { requiresAuth: true }
+const meta = { requiresAuth: false }
 
 /**
  * 在主框架内显示

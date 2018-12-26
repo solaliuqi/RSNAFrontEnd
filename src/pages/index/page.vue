@@ -16,13 +16,15 @@
                             <el-button  class="btn0" type="danger" plain ><i class="fa fa-plus-square" aria-hidden="true"></i>
                                 有框标记</el-button>
                         </div>
+                        <canvas id="canvas"></canvas>
                     </div>
                     <div class="plung">
                         <el-badge is-dot class="item"><i class="fa fa-clipboard" aria-hidden="true"></i> 肺炎图片</el-badge>
                         <el-upload class="upload-demo"
-                                   :before-upload="onUpload"
-                                   action="https://jsonplaceholder.typicode.com/posts/">
-                            <el-button type="primary" class="btn1" >上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                                   action=""
+                                   :before-upload="onUpload">
+                            <el-button slot="trigger" size="small" type="primary" >选择图片<i class="el-icon-upload el-icon--right"></i></el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" >肺炎检测<i class="el-icon-upload el-icon--right"></i></el-button>
                             <div slot="tip" class="el-upload__tip">上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                         <div class="showpic">
@@ -36,9 +38,6 @@
                         <!--图像交互-->
                         <dwvVue ref="dwv"></dwvVue>
                         <!--图像交互-->
-                        <el-dialog :visible.sync="dialogVisible">
-                            <img width="100%" :src="dialogImageUrl" alt="">
-                        </el-dialog>
                     </el-main>
                     <el-footer height="55px">Copyright © 2018, Zhejiang University, All rights reserved.</el-footer>
                 </el-container>
@@ -49,11 +48,17 @@
 
 <script>
     import dwvVue from './components/dwv'
+    import {upImage} from '@/api/sys/main'
 
     export default {
         name: 'App',
         components: {
             dwvVue
+        },
+        data(){
+            return{
+            Pic:null
+            }
         },
         methods: {
             /*传回image像素值*/
@@ -74,9 +79,32 @@
             onModify: function(event) {
                 this.$refs.dwv.onModify(event)
             },
-            /*上传图片*/
+            /*本地上传图片到浏览器*/
             onUpload: function(file) {
                 this.$refs.dwv.onUpload(file)
+            },
+
+
+
+            /*浏览器上传图片到服务器*/
+            submitUpload:function (event) {
+                var _this= this;
+                var cvs = document.createElement("canvas");
+                cvs.width="1024"
+                cvs.height="1024"
+                var cts = cvs.getContext('2d')
+                var imgdata = this.getFile()
+                cts.putImageData(imgdata,0,0,0,0,1024,1024)
+                cvs.toBlob(function(blob) {
+                    var form = new FormData();
+                    form.append("myImage", blob);
+                    upImage(form)
+                        .then(async res => {
+                            if (res==null) return
+                            _this.Pic = res.picid
+                            _this.OnShowbox(res.data)
+                        })
+                },"image/jpeg")
             }
         }
     }
