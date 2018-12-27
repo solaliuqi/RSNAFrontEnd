@@ -30,7 +30,7 @@
                                     class="el-icon-upload el-icon--right"></i></el-button>
                             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">检测肺炎<i
                                     class="el-icon-upload el-icon--right"></i></el-button>
-                            <div slot="tip" class="el-upload__tip">上传jpg/png文件，且不超过500kb</div>
+                            <div slot="tip" class="el-upload__tip">上传jpg/png文件,或dicm数据文件</div>
                         </el-upload>
                         <div class="showpic">
                             <el-button type="danger" class="btn1" value="Draw" v-on:click="getBoxes">提交修改结果 <i
