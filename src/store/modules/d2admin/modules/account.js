@@ -64,7 +64,8 @@ export default {
                     .then(async res => {
                         // 重置数据库内的用户名
                         dispatch('d2admin/user/set', {
-                            name:'游客'
+                            name:'游客',
+                            other:null
                         }, {root: true})
                         // 删除cookies
                         util.cookies.remove('username')

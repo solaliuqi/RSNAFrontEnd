@@ -1,19 +1,18 @@
 <template>
     <div id="dwv">
-        <md-progress-bar md-mode="determinate" :md-value="loaded"></md-progress-bar>
-        <div class="button-row">
-            <md-button class="md-raised md-primary" value="Scroll" v-on:click="onShowbox">显示结果</md-button>
-            <md-button class="md-raised md-primary" value="Draw" v-on:click="onModify">修改结果</md-button>
-            <md-button class="md-raised md-primary" value="WindowLevel" v-on:click="onClick">调整明暗/对比度</md-button>
-            <md-button class="md-raised md-primary" value="ZoomAndPan" v-on:click="onClick">缩放移动</md-button>
-            <md-button class="md-raised md-primary" value="Scroll" v-on:click="OnZoomreset">还原缩放</md-button>
+        <div class="button-row" style="height: 55px">
+            <!--<el-button style="margin-left: 10px;" size="small" type="primary" value="Scroll" v-on:click="onShowbox">显示结果</el-button>-->
+            <el-button style="margin-left: 10px;" size="small" type="primary" value="Draw" v-on:click="onModify">修改结果</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="primary" value="WindowLevel" v-on:click="onClick">调整明暗/对比度</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="primary" value="ZoomAndPan" v-on:click="onClick">缩放移动</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="primary" value="Scroll" v-on:click="OnZoomreset">还原缩放</el-button>
         </div>
-        <div class="layerContainer">
+        <div class="layerContainer" style="height:548px;line-height: 0px">
             <div class="dropBox"></div>
-            <canvas class="imageLayer">仅适用于兼容HTML5的浏览器……</canvas>
+            <canvas class="imageLayer" style="height: 0px">仅适用于兼容HTML5的浏览器……</canvas>
             <div class="drawDiv"></div>
         </div>
-        <div class="legend">{{ legend }}</div>
+
     </div>
 </template>
 
