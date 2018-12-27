@@ -26,20 +26,20 @@
                         <el-upload class="upload-demo"
                                    action=""
                                    :before-upload="onUpload">
-                            <el-button slot="trigger" size="small" type="primary">选择图片<i
+                            <el-button slot="trigger" size="small" type="primary">选择数据<i
                                     class="el-icon-upload el-icon--right"></i></el-button>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">肺炎检测<i
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">检测肺炎<i
                                     class="el-icon-upload el-icon--right"></i></el-button>
                             <div slot="tip" class="el-upload__tip">上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                         <div class="showpic">
-                            <el-button type="danger" class="btn1" value="Draw" v-on:click="getBoxes">显示图片 <i
+                            <el-button type="danger" class="btn1" value="Draw" v-on:click="getBoxes">提交修改结果 <i
                                     class="fa fa-eye" aria-hidden="true"></i></el-button>
-                            <div slot="tip" class="el-upload__tip">查看上传的图片</div>
+                            <div slot="tip" class="el-upload__tip">医生提交修改后的肺炎检测结果</div>
                         </div>
                     </div>
                 </el-aside>
-                <el-container style="height: 650px">
+                <el-container>
                     <el-main style="line-height: 10px; background: none;">
                         <!--图像交互-->
                         <dwvVue ref="dwv"></dwvVue>
