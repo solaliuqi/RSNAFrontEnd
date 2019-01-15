@@ -30,20 +30,20 @@ router.beforeEach((to, from, next) => {
   store.commit('d2admin/search/set', false)
   // 验证当前路由所有的匹配中是否需要有登录验证的
   if (to.matched.some(r => r.meta.requiresAuth)) {
-    // 这里暂时将cookie里是否存有token作为验证是否登录的条件
+    // 这里暂时将cookie里是否存有username作为验证是否登录的条件
     // 请根据自身业务需要修改
-    const token = util.cookies.get('token')
+    const token = util.cookies.get('username')
     if (token && token !== 'undefined') {
       next()
-    } else {
+    } else  {
       // 将当前预计打开的页面完整地址临时存储 登录后继续跳转
       // 这个 cookie(redirect) 会在登录后自动删除
       util.cookies.set('redirect', to.fullPath)
       // 没有登录的时候跳转到登录界面
       next(
-      //   {
-      //   name: 'login'
-      // }
+        {
+         name: 'login'
+        }
       )
       NProgress.done() // next(...)重定向不会触发router.afterEach钩子，需要手动hack一下
     }
