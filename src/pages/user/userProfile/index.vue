@@ -42,6 +42,7 @@
                         <el-input placeholder="具体地址" v-model="userForm.address" style="width:500px"></el-input>
                     </el-form-item>
                 </el-form>
+                <el-button type="primary" @click="updateProfile">修改信息</el-button>
             </div>
             <div class="user-profile-right">
                 <el-upload
@@ -49,8 +50,7 @@
                         action="123"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
-                        :on-change="onchange"
-                        :before-upload="beforeAvatarUpload">
+                        :before-upload = "beforeAvatarUpload" >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
@@ -77,15 +77,16 @@
             return {
                 userForm: {
                     username: 'xiaying',
-                    gender: null,
+                    gender:null,
                     email: "xiaying@xy.com",
                     phone: 123456789,
                     address: null,
+                    birthDate:'',
                 },
                 pca: pca,
                 pcaa: pcaa,
-                placeholder: [" ", " ", " "],
-                selected: [],
+                // placeholder: [" ", " ", " "],
+                selected: ['广东省', '深圳市', '南山区'],
 
                 rules: {},
 
@@ -123,6 +124,9 @@
           //   }
           //   reader.readAsDataURL(file);
           // },
+          updateProfile(){
+              const
+          }
         },
         created: function () {
             this.userForm.username = this.getUserInfo().name
@@ -147,7 +151,7 @@
 
     .user-profile-right {
         width: 40%;
-        float: left;
+        float: right;
         height: 100px;
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
