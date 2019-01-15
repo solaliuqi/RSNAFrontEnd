@@ -41,9 +41,9 @@ router.beforeEach((to, from, next) => {
       util.cookies.set('redirect', to.fullPath)
       // 没有登录的时候跳转到登录界面
       next(
-        {
-         name: 'login'
-        }
+        // {
+        //  name: 'login'
+        // }
       )
       NProgress.done() // next(...)重定向不会触发router.afterEach钩子，需要手动hack一下
     }
