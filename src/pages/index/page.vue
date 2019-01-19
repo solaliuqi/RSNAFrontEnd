@@ -9,13 +9,13 @@
                 <el-aside width="250px">
                     <div>
                         <el-badge is-dot class="item"><i class="fa fa-yelp" aria-hidden="true"></i> 肺炎检测结果</el-badge>
-                        <div class="checkbox">
-                            <el-button class="btn0" type="primary" plain><i class="fa fa-crosshairs"
+                        <div class="checkbox" >
+                            <el-button class="btn0" :disabled="boxButton.showNo" :autofocus="true" type="success"><i class="fa fa-crosshairs"
                                                                             aria-hidden="true"></i>
                                 无框标记
                             </el-button>
                             <br>
-                            <el-button class="btn0" type="danger" plain><i class="fa fa-plus-square"
+                            <el-button class="btn1" :disabled="boxButton.showHas" :autofocus="true" type="danger"><i class="fa fa-plus-square"
                                                                            aria-hidden="true"></i>
                                 有框标记
                             </el-button>
@@ -33,7 +33,7 @@
                             <div slot="tip" class="el-upload__tip">上传jpg/png文件,或dicm数据文件</div>
                         </el-upload>
                         <div class="showpic">
-                            <el-button type="danger" class="btn1" value="Draw" v-on:click="getBoxes">提交修改结果 <i
+                            <el-button type="danger" class="btn1" value="Draw" @click="submitModification">提交修改结果 <i
                                     class="fa fa-eye" aria-hidden="true"></i></el-button>
                             <div slot="tip" class="el-upload__tip">医生提交修改后的肺炎检测结果</div>
                         </div>
@@ -55,8 +55,9 @@
 
 <script>
     import dwvVue from './components/dwv'
-    import {upImage} from '@/api/sys/main'
-
+    import {upImage, upModification} from '@/api/sys/main'
+    // store
+    import store from '@/store/index'
     export default {
         name: 'App',
         components: {
@@ -64,7 +65,13 @@
         },
         data() {
             return {
-                Pic: null
+                Pic: null,
+                ImageBoxes: null,
+                isUpPic: false,
+                boxButton: {
+                    showNo: true,
+                    showHas: true,
+                },
             }
         },
         methods: {
@@ -91,7 +98,6 @@
                 this.$refs.dwv.onUpload(file)
             },
 
-
             /*浏览器上传图片到服务器*/
             submitUpload: function (event) {
                 var _this = this;
@@ -100,17 +106,65 @@
                 cvs.height = "1024"
                 var cts = cvs.getContext('2d')
                 var imgdata = this.getFile()
+                if(imgdata == null) {
+                    _this.$message.error("请先上传图片")
+                    return
+                }
+                _this.$store.commit('d2admin/gray/set', true)
                 cts.putImageData(imgdata, 0, 0, 0, 0, 1024, 1024)
                 cvs.toBlob(function (blob) {
                     var form = new FormData();
                     form.append("myImage", blob);
                     upImage(form)
                         .then(async res => {
+                            _this.$store.commit('d2admin/gray/set', false)
                             if (res == null) return
                             _this.Pic = res.picid
-                            _this.OnShowbox(res.data)
+                            // _this.$store.dispatch('d2admin/transition/set', false)
+                            _this.$message.success('检测完毕')
+                            _this.isUpPic = true
+                            //计算box个数
+                            var jsonLength = 0;
+                            for(var item in res.data){
+                                jsonLength++;
+                            }
+                            if(jsonLength > 0) {
+                                _this.OnShowbox(res.data);
+                                _this.boxButton.showNo = true;
+                                _this.boxButton.showHas = false;
+                            }else{
+                                _this.boxButton.showNo = false;
+                                _this.boxButton.showHas = true;
+                            }
                         })
+                    _this.$message('肺炎检测中，请稍后......', {type: 'warning'})
                 }, "image/jpeg")
+            },
+
+            /*上传修改结果*/
+            submitModification: function (event) {
+                var _this = this;
+                if(_this.isUpPic === false) {
+                    _this.$message.error('请先上传图片，并进行检测')
+                    return
+                }
+                var boxes = _this.getBoxes()
+                //计算box个数
+                var jsonLength = 0;
+                for(var item in boxes){
+                    jsonLength++;
+                }
+                if(jsonLength == 0) {
+                    _this.$message.error('上传修改结果失败，请添加检测框后再次提交！')
+                    return
+                }
+                _this.ImageBoxes = {};
+                _this.ImageBoxes["localRequests"] = boxes;
+                _this.ImageBoxes["picid"] = _this.Pic
+                console.log(_this.ImageBoxes)
+                var data1 = JSON.stringify(this.ImageBoxes)
+                upModification(data1)
+                _this.$message.success("上传成功")
             }
         }
     }
@@ -177,6 +231,9 @@
 
     .btn1 {
         width: 200px;
+        height: 65px;
+        margin-bottom: 15px;
+        border-radius: 10px;
         font-size: 20px;
     }
 

@@ -9,38 +9,37 @@
             <!-- 表单部分 -->
             <div class="form-group">
                 <el-card>
-                    <el-form ref="loginForm" label-position="top" :rules="rules" :model="formLogin" size="default">
+                    <el-form ref="loginForm" :rules="rules" :model="formLogin" label-position="top" size="default">
+                        <el-form-item prop="select">
+                            <el-select  v-model="formLogin.type" placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
                         <el-form-item prop="username">
-                            <el-input type="text" v-model="formLogin.username" placeholder="用户名">
+                            <el-input type="text"  v-model="formLogin.username" placeholder="用户名">
                                 <i slot="prepend" class="fa fa-user-circle-o"></i>
                             </el-input>
                         </el-form-item>
                         <el-form-item prop="password">
-                            <el-input type="password" v-model="formLogin.password" placeholder="密码">
+                            <el-input type="password" v-model="formLogin.password" placeholder="输入密码">
                                 <i slot="prepend" class="fa fa-keyboard-o"></i>
                             </el-input>
                         </el-form-item>
-                        <el-form-item prop="code">
-                            <el-input type="text" v-model="formLogin.code" placeholder="- - - -">
-                                <template slot="prepend">验证码</template>
-                                <template slot="append">
-                                    <img class="login-code" src="http://localhost:8081/RSNA_SHOW/user/vcode.do">
-                                </template>
+                        <el-form-item prop="password2">
+                            <el-input type="password" v-model="formLogin.password2" placeholder="再次输入密码">
+                                <i slot="prepend" class="fa fa-keyboard-o"></i>
                             </el-input>
                         </el-form-item>
-                        <el-form-item>
-                            <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button size="default" @click="register" type="primary" class="button-login">注册</el-button>
-                        </el-form-item>
+                        <el-button size="default" @click="submit" type="primary" class="button-login">注册</el-button>
                     </el-form>
                 </el-card>
             </div>
-            <!-- 快速登录按钮 -->
-            <el-button size="default" type="info" class="button-help" @click="dialogVisible = true">
-                快速选择用户（测试功能）
-            </el-button>
 
 
         </div>
@@ -66,45 +65,54 @@
     require('particles.js')
     import config from './config/default'
     import {mapActions} from 'vuex'
-
+    import {userRegister} from '@/api/sys/main'
     export default {
         data() {
+            var validatePass = (rule, value, callback) => {
+                if (value !== this.formLogin.password || value === "") {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
             return {
+                options: [{
+                    value: 'patient',
+                    label: 'patient'
+                }, {
+                    value: 'doctor',
+                    label: 'doctor'
+                }],
                 // 快速选择用户
                 dialogVisible: false,
                 users: [
                     {
                         name: '管理员',
                         username: 'admin',
-                        password: 'admin'
-                    },
-                    {
-                        name: '编辑',
-                        username: 'editor',
-                        password: 'editor'
-                    },
-                    {
-                        name: '用户1',
-                        username: 'user1',
-                        password: 'user1'
+                        password: 'admin',
+                        password2: 'admin'
                     }
                 ],
                 // 表单
                 formLogin: {
-                    username: '21851002',
-                    password: '12345678',
-                    code: 'v9am'
+                    username: '',
+                    password: '',
+                    password2: '',
+                    type: ''
                 },
                 // 校验
                 rules: {
+                    select: [
+                        {required: true, message: '请选择用户类型', trigger: 'blur'}
+                    ],
                     username: [
                         {required: true, message: '请输入用户名', trigger: 'blur'}
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'}
                     ],
-                    code: [
-                        {required: true, message: '请输入验证码', trigger: 'blur'}
+                    password2: [
+                        {required: true, message: '两次密码不一致', validator: validatePass, trigger: 'blur'}
                     ]
                 }
             }
@@ -115,8 +123,6 @@
         },
         beforeDestroy() {
             // 销毁 particlesJS
-            // thanks https://github.com/d2-projects/d2-admin/issues/65
-            // ref https://github.com/VincentGarreau/particles.js/issues/63
             if (pJSDom && pJSDom.length > 0) {
                 pJSDom[0].pJS.fn.vendors.destroypJS()
                 pJSDom = []
@@ -133,37 +139,23 @@
             handleUserBtnClick(user) {
                 this.formLogin.username = user.username
                 this.formLogin.password = user.password
+                this.formLogin.password2 = user.password2
                 this.submit()
             },
-            /**
-             * @description 跳转到注册页面
-             */
-            register () {
-                this.$router.push({
-                    name: 'register'
-                })
-            },
+
             /**
              * @description 提交表单
              */
             // 提交登录信息
             submit() {
-                this.$refs.loginForm.validate((valid) => {
-                    if (valid) {
-                        // 登录
-                        // 注意 这里的演示没有传验证码
-                        // 具体需要传递的数据请自行修改代码
-                        this.login({
-                            vm: this,
-                            username: this.formLogin.username,
-                            password: this.formLogin.password,
-                            vcode: this.formLogin.code
-                        })
-                    } else {
-                        // 登录表单校验失败
-                        this.$message.error('表单校验失败')
-                    }
-                })
+                console.log(this.formLogin.username + this.formLogin.password + this.formLogin.password2)
+                userRegister({
+                    username: this.formLogin.username,
+                    password: this.formLogin.password,
+                    usertype: this.formLogin.type
+                }).then(async res => {
+
+                });
             }
         }
     }

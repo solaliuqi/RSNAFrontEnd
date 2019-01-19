@@ -10,3 +10,20 @@ export function upImage (data) {
         data:data
     })
 }
+
+export function upModification (data) {
+    return request({
+        url: '/image/imageUpdate.do',
+        method: 'post',
+        contentType: 'application/json',
+        data:data
+    })
+}
+
+export function userRegister (data) {
+    return request({
+        url: '/user/register.do',
+        method: 'get',
+        params: data
+    })
+}
