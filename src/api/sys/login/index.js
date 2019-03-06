@@ -15,3 +15,12 @@ export function AccountLogout(data) {
         params:data
     })
 }
+
+export function userUpdate(data) {
+    return request({
+        url: '/userinfo/update.do',
+        method: 'post',
+        contentType: 'application/json',
+        data:data
+    })
+}

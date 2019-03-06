@@ -33,7 +33,7 @@
                             <div slot="tip" class="el-upload__tip">上传jpg/png文件,或dicm数据文件</div>
                         </el-upload>
                         <div class="showpic">
-                            <el-button type="danger" class="btn1" value="Draw" @click="submitModification">提交修改结果 <i
+                            <el-button type="danger" :disabled="isDoctor" class="btn1" value="Draw" @click="submitModification">提交修改结果 <i
                                     class="fa fa-eye" aria-hidden="true"></i></el-button>
                             <div slot="tip" class="el-upload__tip">医生提交修改后的肺炎检测结果</div>
                         </div>
@@ -56,6 +56,7 @@
 <script>
     import dwvVue from './components/dwv'
     import {upImage, upModification} from '@/api/sys/main'
+    import {mapGetters} from 'vuex'
     // store
     import store from '@/store/index'
     export default {
@@ -72,9 +73,22 @@
                     showNo: true,
                     showHas: true,
                 },
+                isDoctor:true,
             }
         },
+        created: function () {
+            var type = this.getUserInfo().other.usertype
+            if (type=="doctor")
+                this.isDoctor = false
+            console.log(type)
+        },
         methods: {
+            // 获取用户信息
+                ...mapGetters('d2admin/user', [
+                    'getUserInfo'
+                ]),
+
+
             /*传回image像素值*/
             getFile: function () {
                 return this.$refs.dwv.getFile()
@@ -161,10 +175,10 @@
                 _this.ImageBoxes = {};
                 _this.ImageBoxes["localRequests"] = boxes;
                 _this.ImageBoxes["picid"] = _this.Pic
-                console.log(_this.ImageBoxes)
                 var data1 = JSON.stringify(this.ImageBoxes)
                 upModification(data1)
-                _this.$message.success("上传成功")
+                    .then(async res => {
+                        _this.$message.success("上传成功")})
             }
         }
     }

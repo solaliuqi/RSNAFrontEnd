@@ -66,6 +66,8 @@
     import config from './config/default'
     import {mapActions} from 'vuex'
     import {userRegister} from '@/api/sys/main'
+    import util from '@/libs/util.js'
+    import {Message} from 'element-ui'
     export default {
         data() {
             var validatePass = (rule, value, callback) => {
@@ -148,13 +150,32 @@
              */
             // 提交登录信息
             submit() {
-                console.log(this.formLogin.username + this.formLogin.password + this.formLogin.password2)
+                // console.log(this.formLogin.username + this.formLogin.password + this.formLogin.password2)
                 userRegister({
                     username: this.formLogin.username,
                     password: this.formLogin.password,
                     usertype: this.formLogin.type
                 }).then(async res => {
+                    // 这里按照项目需求只设置username作为登陆状态使用
+                    // 因为跨域，所以前后端都设置cookies,但这样的话就要保证前后端的cookies设置的一致
+                    util.cookies.set('username', res.username)
 
+                    // 设置 vuex 用户信息
+                    await this.$store.dispatch('d2admin/user/set', {
+                        name: res.username,
+                        other: res
+                    }, {root: true})
+
+                    this.$router.push({
+                        name: 'index'
+                    })
+
+                    // 显示提示
+                    Message({
+                        message: "登陆成功",
+                        type: 'success',
+                        duration: 3 * 1000
+                    })
                 });
             }
         }

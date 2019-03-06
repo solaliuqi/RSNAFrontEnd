@@ -27,3 +27,11 @@ export function userRegister (data) {
         params: data
     })
 }
+
+export function getImageHistory (data) {
+    return request({
+        url: '/image/imageHistory.do',
+        method: 'get',
+        params: data
+    })
+}

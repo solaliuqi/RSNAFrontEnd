@@ -88,7 +88,7 @@
                     data["right_y"] = getChildren.children[i].children[0].attrs.y + getChildren.children[i].children[0].attrs.height;
                     datas.push(data);
                 }
-                return JSON.stringify(datas)
+                return datas
             },
             OnZoomreset: function (event) {
                 this.dwvApp.onZoomReset()

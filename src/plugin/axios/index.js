@@ -43,7 +43,7 @@ service.defaults.withCredentials = true
 service.interceptors.request.use(
     config => {
         // 在请求发送之前做一些处理
-        if (config.url == '/image/imageUpdate.do') {
+        if (config.url === '/image/imageUpdate.do'|| config.url === '/userinfo/update.do') {
             config.headers = {
                  'Content-Type': 'application/json'
             };
